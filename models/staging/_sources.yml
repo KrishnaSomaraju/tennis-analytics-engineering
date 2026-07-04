@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw ATP tennis data loaded from the TML-Database source by the ingestion script."
+    database: tennis-analytics-501013
+    schema: raw
+    tables:
+      - name: matches_2020
+      - name: matches_2021
+      - name: matches_2022
+      - name: matches_2023
+      - name: matches_2024
+      - name: players
