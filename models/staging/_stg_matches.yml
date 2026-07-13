@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_matches
+    description: "One row per ATP singles match, 2020 to 2024, unified from the five yearly raw match tables. Match fact."
+    columns:
+      - name: winner_id
+        description: "Player id of the match winner. Not unique: a player wins many matches."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_players')
+                field: player_id
+
+      - name: loser_id
+        description: "Player id of the match loser. Not unique: a player loses many matches."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_players')
+                field: player_id
+
+      - name: surface
+        description: "Court surface. Nullable: Davis Cup ties carry no recorded surface (53 matches)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Hard', 'Clay', 'Grass']
+
+      - name: best_of
+        description: "Number of sets in the match format. Professional tennis is best of 3 or best of 5."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [3, 5]
+                quote: false
+
+      - name: winner_rank
+        description: "Winner's ATP rank at the time of the match. Nullable: qualifiers and wildcards may be unranked."

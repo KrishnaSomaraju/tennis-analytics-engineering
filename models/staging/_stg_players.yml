@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: stg_players
+    description: "One row per ATP player, cleaned from the raw players table. Player dimension."
+    columns:
+      - name: player_id
+        description: "Unique identifier for each player. Primary key."
+        tests:
+          - unique
+          - not_null
