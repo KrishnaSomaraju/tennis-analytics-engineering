@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: dim_players
+    description: "One row per player who appeared in a match between 2020 and 2024. Player dimension (779 rows, filtered from 7,643 in staging)."
+    columns:
+      - name: player_id
+        description: "Unique identifier for each player. Primary key."
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_matches
+    description: "One row per ATP singles match, 2020 to 2024. Atomic match fact. Incremental, partitioned by match_date, clustered by surface."
+    columns:
+      - name: match_key
+        description: "Surrogate key: hash of tourney_name, tourney_date, winner_id, loser_id. Primary key."
+        tests:
+          - unique
+          - not_null
+
+      - name: winner_id
+        description: "Player id of the winner. Foreign key to dim_players."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_players')
+                field: player_id
+
+  - name: fct_player_matches
+    description: "One row per player per match (two rows per match). Derived from fct_matches for player-centric analysis."
+    columns:
+      - name: player_id
+        description: "The player this row is about. NOT unique: a player has one row per match played."
+        tests:
+          - not_null

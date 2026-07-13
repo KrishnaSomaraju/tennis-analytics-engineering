@@ -10,12 +10,12 @@
 
 with matches as (
 
-    select * from {{ ref('stg_matches') }}
+    select distinct * from {{ ref('stg_matches') }}
 
 )
 
 select
-    {{ dbt_utils.generate_surrogate_key(['tourney_name', 'tourney_date', 'winner_id', 'loser_id']) }} as match_key,
+    {{ dbt_utils.generate_surrogate_key(['tourney_name', 'tourney_date', 'round', 'winner_id', 'loser_id']) }} as match_key,
     parse_date('%Y%m%d', cast(tourney_date as string)) as match_date,
     tourney_name,
     tourney_level,
