@@ -1,0 +1,30 @@
+name: dbt CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dbt
+        run: pip install dbt-bigquery
+
+      - name: Install dbt packages
+        run: dbt deps
+
+      - name: Run dbt build
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: dbt build --target ci
