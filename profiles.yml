@@ -1,0 +1,19 @@
+tennis_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: tennis-analytics-501013
+      dataset: dbt_dev
+      location: US
+      threads: 4
+
+    ci:
+      type: bigquery
+      method: service-account-json
+      project: tennis-analytics-501013
+      dataset: dbt_ci
+      location: US
+      threads: 4
+      keyfile_json: "{{ env_var('GCP_SA_KEY') | as_native }}"
